@@ -1,18 +1,37 @@
 !function(){
+  var duration = 20
+  $('.actions').on('click', 'button', function(e){
+    let $button = $(e.currentTarget) // button
+    let speed = $button.attr('data-speed') 
+    $button.addClass('active')
+      .siblings('.active').removeClass('active')
+    switch(speed){
+      case 'slow':
+        duration = 100
+        break
+      case 'normal':
+        duration = 20
+        break
+      case 'fast':
+        duration = 4
+        break
+    }
+  })
   function writeCode(prefix, code, fn){
     let container = document.querySelector('#code')
     let styleTag = document.querySelector('#styleTag')
     let n = 0
-    let id = setInterval(()=>{
+    setTimeout(function run(){
       n += 1
       container.innerHTML = code.substring(0,n)
       styleTag.innerHTML = code.substring(0,n)
       container.scrollTop = container.scrollHeight
-      if(n >= code.length){
-        window.clearInterval(id)
+      if(n < code.length){
+        setTimeout(run, duration)
+      }else{
         fn && fn.call()
       }
-    },10)
+    }, duration)
   }
   let code = `
   /*
@@ -20,7 +39,6 @@
    */
   .preview{
     height: 100%;
-    border: 1px solid green;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -175,5 +193,7 @@
   /*
    * 好了，这只皮卡丘送给你
    */`
+
   writeCode('', code)
+
 }.call()
